@@ -18,7 +18,7 @@ from os.path import dirname
 from pandas.plotting import table
 import dataframe_image as dfi
 from docx.shared import Pt
-sys.path.append("/home/spoudel1/bin/python/JUMP_l/")
+#sys.path.append("/home/spoudel1/bin/python/JUMP_l/")
 from JUMP_l_modules import *
 
 # In[169]:
