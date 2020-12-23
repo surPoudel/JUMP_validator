@@ -1,0 +1,21 @@
+[caseEvaluation]
+
+
+#this is the path where pep.xml to .tsv file is converted in the folder
+
+file_path_dyn = /research/projects/penggrp/Alzheimer_BannerSunInstitute/penggrp/proteomics/batch0_pooledSamples/PTM_paper_2020/Final_Results/Pho_2020/comprehensive_search/JUMP_l_validation_Phospho1/TestJUMPl
+
+dynAA = STY,M
+
+#{"114.0429":"Ubiquitin","42.0106":"Acetylation","14.0157":"monoMethylation"}
+
+dyn_mod = 79.966331
+
+#ID.txt input from sjump filter result
+
+jump_f_dyn = /research/projects/penggrp/Alzheimer_BannerSunInstitute/penggrp/proteomics/batch0_pooledSamples/PTM_paper_2020/Final_Results/Pho_2020/comprehensive_search/JUMP_l_validation_Phospho1/sum_PhoEnriched/ID.txt             
+
+
+#This is the folder name that you want to keep. I keep it with ptm so it is easy to remember
+ptm = Phospho
+
