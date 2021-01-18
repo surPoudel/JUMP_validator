@@ -1,21 +1,41 @@
 [caseEvaluation]
 
 
-#this is the path where pep.xml to .tsv file is converted in the folder
+#this is the input excel file for the each peptide that are to be manually validated. Headers = Exp	scan	charge (Exp = experiment/fraction name, scan = scan number, charge = z)
+peptideFile = /Users/spoudel1/Desktop/PTM_study/ChaoPeng/Check_pho_peptides_Chao.xlsx
 
-file_path_dyn = /research/projects/penggrp/Alzheimer_BannerSunInstitute/penggrp/proteomics/batch0_pooledSamples/PTM_paper_2020/Final_Results/Pho_2020/comprehensive_search/JUMP_l_validation_Phospho1/TestJUMPl
+#this is the input ID.txt file. It can also be input from jump_l program ID.lscore file
+jump_f_id = /Users/spoudel1/Desktop/PTM_study/ChaoPeng/solubleTauPTMs/dta2ms2/phosphorylation/ID.lscore
 
-dynAA = STY,M
+#this option says whether the output is from jump_l program or not. Type "yes" if JUMP_l was used for pho site localization else type "no"
+jumpl = Yes
 
-#{"114.0429":"Ubiquitin","42.0106":"Acetylation","14.0157":"monoMethylation"}
+#path (folder) for .ms2 if .ms2 was used for searching
+ms2_path = /Users/spoudel1/Desktop/PTM_study/ChaoPeng
 
-dyn_mod = 79.966331
+#path (folder) for .mzXML 
+mzXML_path = /Users/spoudel1/Desktop/PTM_study/ChaoPeng
 
-#ID.txt input from sjump filter result
+#files used to extract ms2 information. options (ms2 or mzxml). If option is .ms2, the program will only use ms2_path and if option is .mzXML, the program will use mzXML_path
 
-jump_f_dyn = /research/projects/penggrp/Alzheimer_BannerSunInstitute/penggrp/proteomics/batch0_pooledSamples/PTM_paper_2020/Final_Results/Pho_2020/comprehensive_search/JUMP_l_validation_Phospho1/sum_PhoEnriched/ID.txt             
+ms2_fileType = mzxml
 
+#list of symbols used in the modifications (dynamic modificaitons). This information you can get if from pep.xml files
 
-#This is the folder name that you want to keep. I keep it with ptm so it is easy to remember
-ptm = Phospho
+dynMods = @:15.99492,*:79.966331,#:79.966331,%%:79.966331
 
+#list static modification in the parameter file. If you have n-term modification n:229.162932
+staticMods = C:57.021464
+
+#parameters for matching ions
+#ion_types to analyze a.b.c,x,y,z
+ion_types = b,y
+
+#neutral losses to analyze H2O, NH3, H3PO4
+ionLoss = NH3,H2O 
+
+#tolerance for ms2 matching = fragment ion tolerance
+tol=10
+
+#Output folder path
+out_fol = /Users/spoudel1/Desktop/PTM_study/ChaoPeng
