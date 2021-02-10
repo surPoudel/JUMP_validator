@@ -18,14 +18,7 @@ mzXML_path = /Users/spoudel1/Desktop/PTM_study/ChaoPeng
 
 #files used to extract ms2 information. options (ms2 or mzxml). If option is .ms2, the program will only use ms2_path and if option is .mzXML, the program will use mzXML_path
 
-ms2_fileType = mzxml
-
-#list of symbols used in the modifications (dynamic modificaitons). This information you can get if from pep.xml files
-
-dynMods = @:15.99492,*:79.966331,#:79.966331,%%:79.966331
-
-#list static modification in the parameter file. If you have n-term modification n:229.162932
-staticMods = C:57.021464
+ms2_fileType = ms2
 
 #parameters for matching ions
 #ion_types to analyze a.b.c,x,y,z
@@ -39,3 +32,6 @@ tol=10
 
 #Output folder path
 out_fol = /Users/spoudel1/Desktop/PTM_study/ChaoPeng
+
+#example pep.xml file that was generated from current search strategy. For example, if you used comet to search 100 raw files. Keep the full path of one pep.xml file (you don't need best file, any file will work)
+pepxml = /Users/spoudel1/Downloads/q190622_VL1377_A.pep.xml
