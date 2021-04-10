@@ -1,4 +1,9 @@
-# %%
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[1]:
+
+
 import pandas as pd
 from docx import Document
 from docx.shared import Inches
@@ -20,12 +25,19 @@ from pyteomics import mzxml, auxiliary, pepxml
 # sys.path.append("/home/spoudel1/bin/python/JUMP_localization_python/JUMP_localization")
 from JUMP_l_modules import *
 
+
+# In[2]:
+
+
 params_file = sys.argv[1]
-# params_file = "jump_validator.params"
+#params_file = "/Users/spoudel1/Desktop/PTM_study/JUMP_validation_Abeta/jump_validator.params"
 #params_file = "../parameterFile/map_comet_jump_fJUMP.params"
 config.read(params_file)
 
-# %%
+
+# In[3]:
+
+
 '''
 #this is the input excel file for the each peptide that are to be manually validated. Headers = Exp	scan	charge (Exp = experiment/fraction name, scan = scan number, charge = z)
 peptideFile = /Users/spoudel1/Desktop/PTM_study/ChaoPeng/Check_pho_peptides_Chao.xlsx
@@ -63,7 +75,10 @@ ionLoss = NH3,H2O
 tol=10
 '''
 
-# %%
+
+# In[4]:
+
+
 peptideFile = config["caseEvaluation"]["peptideFile"]
 jump_f_id = config["caseEvaluation"]["jump_f_id"]
 jumpl = config["caseEvaluation"]["jumpl"]
@@ -78,21 +93,36 @@ out_fol = config["caseEvaluation"]["out_fol"]
 #example pepxml file to parse the modification information
 pepxml = config["caseEvaluation"]["pepxml"]
 
-# %%
+
+# In[5]:
+
+
 # peptideFile = "../PTM_study/ChaoPeng/solubleTauPTMs/phosphorylation/ID.lscore"
 df_pho2 = pd.read_csv(jump_f_id,delimiter=";",skiprows=return_skiprows(jump_f_id,";", "Peptide"))
 
-# %%
+
+# In[6]:
+
+
 # inputCheck = "../PTM_study/ChaoPeng/Check_pho_peptides_Chao.xlsx"
 inputCheck =peptideFile
 
-# %%
-# jumpl = "Yes"
 
-# %%
+# In[7]:
+
+
 inputDF = prepareInput(inputCheck)
 
-# %%
+
+# In[8]:
+
+
+os.getcwd()
+
+
+# In[9]:
+
+
 df_pho2["spectrum"] = df_pho2.apply(createOutfile, df=df_pho2, axis=1)
 
 if jumpl.upper()=="YES":
@@ -103,23 +133,41 @@ else:
     scoreDict = {}
     
 df_pho2[["exp","scan","charge"]] = df_pho2["spectrum"].str.split(".",expand=True)
+df_pho2["JUMPl_score"] = df_pho2.spectrum.map(scoreDict)
 
 
-# %%
-df_pho2.drop_duplicates(subset="spectrum", inplace=True, keep="first")
+# In[10]:
 
-# %%
+
+df_pho2.drop_duplicates(subset=["spectrum","Peptides"], inplace=True, keep="first")
+
+
+# In[11]:
+
+
 df_pho3 = df_pho2.loc[df_pho2.spectrum.isin(list(inputDF.spectrum))]
 df_pho = df_pho3.copy()
 df_pho["expScan"] = df_pho.exp+"."+df_pho.scan.astype("str")
 
-# %%
-if ms2_fileType.upper() == "MZXML":
-    mzXML_list = glob.glob(mzXML_path+"/*.mzXML")
-else:
-    mzXML_list = glob.glob(ms2_path+"/*.ms2")
 
-# %%
+# In[40]:
+
+
+##select required mzxml files for concatention#3
+mzXML_list = []
+samples = list(set(inputDF.Exp))
+for sample in samples:
+
+    if ms2_fileType.upper() == "MZXML":
+        mzxml = glob.glob(mzXML_path+"/"+sample+"/*.mzXML")[0]
+    else:
+        mzxml = glob.glob(ms2_path+"/"+sample+"/*.ms2")[0]
+    mzXML_list.append(mzxml)
+
+
+# In[42]:
+
+
 if ms2_fileType.upper() == "MZXML":
     testID_mzXML = mzmlDF(mzXML_list, list(set(df_pho["expScan"])))
     mz_spectrumDict = dict(zip(testID_mzXML.expScan, testID_mzXML["m/z"]))
@@ -132,59 +180,135 @@ else:
     ms2DF=msToDF(mzXML_list, list(inputDF.spectrum))
     ms2DF["JUMPl_score"] = ms2DF.spectrum.map(scoreDict)
 
-# %%
+
+# In[16]:
+
+
 #list all of these symbols in the parameter file
 #jump_mod_dict = {"@":"15.99492","*":"79.966331","#":"79.966331","%":"79.966331"}
 
-# %%
+
+# In[17]:
+
+
 #list static modification in the parameter file
 #sta_AA = {"C":"57.021464"}
 
-# %%
+
+# In[18]:
+
+
 #dynMods = "@:15.99492,*:79.966331,#:79.966331,%:79.966331"
 
-# %%
+
+# In[19]:
+
+
 # jump_mod_dict = paramsOptToDict(dynMods)
 # sta_AA = paramsOptToDict(staticMods)
 
-# %%
+
+# In[20]:
+
+
 jump_modAA_dict, jump_mod_dict, sta_AA = getDynStatModsInfoPepXml(pepxml)
 
-# %%
-df_pho[["plain_peptide","modifications"]] = df_pho.apply(makeJumpPlainPeptideAndModCols, sta_AA=sta_AA,jump_mod_dict=jump_mod_dict, axis=1)
+
+# In[21]:
 
 
-# %%
+sta_AA
+
+
+# In[22]:
+
+
+df_pho[["plain_peptide","modifications"]] = df_pho.apply(computeModifications, sta_AA=sta_AA,jump_mod_dict=jump_mod_dict, axis=1)
+
+
+# In[23]:
+
+
 if "SequenceProbablity" not in df_pho.columns:
     df_pho["SequenceProbablity"] = "NA"
 
-# %%
+
+# In[24]:
+
+
 reqdCols = ['spectrum', 'plain_peptide', 'modifications',
        'SequenceProbablity', 'XCorr','JUMPl_score']
 
-# %%
+
+# In[25]:
+
+
 df_pho2 = df_pho[reqdCols]
 inputFileDf = df_pho2.copy()
 # inputFileDf = df_pho2.loc[df_pho2.spectrum.str.contains("q190622_VL1377_A")]
 
+
+# In[27]:
+
+
+inputFileDf["spectrum_modifications"] = inputFileDf.spectrum+"_"+inputFileDf.modifications #this is required for same peptide and same spectrum to test different modifications (manually ID.txt file is created by copying ID line but replaceing the peptide sequence with new modificaitons)
 inputFileDf['combined'] = inputFileDf.apply(lambda row: '\t'.join(row.values[0:3].astype(str)), axis=1)
 
-combinedDict = dict(zip(inputFileDf.spectrum,inputFileDf.combined))
-plainPepDict = dict(zip(inputFileDf.spectrum,inputFileDf.plain_peptide))
-modSiteDict = dict(zip(inputFileDf.spectrum,inputFileDf.modifications))
+
+# In[28]:
 
 
-ms2DF_final = ms2DF.copy()
+combinedDict = dict(zip(inputFileDf.spectrum_modifications,inputFileDf.combined))
+plainPepDict = dict(zip(inputFileDf.spectrum_modifications,inputFileDf.plain_peptide))
+modSiteDict = dict(zip(inputFileDf.spectrum_modifications,inputFileDf.modifications))
 
-# %%
-ms2DF_final["spectrum_peptide_mod"] = ms2DF_final.spectrum.map(combinedDict)
-ms2DF_final["plain_peptide"] = ms2DF_final.spectrum.map(plainPepDict)
-ms2DF_final["mod_site"] = ms2DF_final.spectrum.map(modSiteDict)
 
-ms2DF2=ms2DF_final.dropna(subset=["spectrum_peptide_mod"]).reset_index()
+# In[29]:
+
+
+# ms2DF = ms2ToDf(exms2)
+
+
+# In[30]:
+
+
+ms2DF_2 = ms2DF.merge(inputFileDf, how="inner", on = "spectrum")
+
+
+# In[31]:
+
+
+ms2DF_final = ms2DF_2.copy()
+
+
+# In[32]:
+
+
+# ms2DF_final["spectrum_peptide_mod"] = ms2DF_final.spectrum_modifications.map(combinedDict)
+# ms2DF_final["plain_peptide"] = ms2DF_final.spectrum_modifications.map(plainPepDict)
+# ms2DF_final["mod_site"] = ms2DF_final.spectrum_modifications.map(modSiteDict)
+
+
+# In[33]:
+
+
+ms2DF2=ms2DF_final.dropna(subset=["spectrum_modifications"]).reset_index()
+
+
+# In[34]:
+
+
 newDF = ms2DF2.rename(columns={"m/z":"exp_mz_list","intensity":"intensity_list"})
 
-file_path_dyn = os.getcwd()
+
+# In[38]:
+
+
+mkdir(out_fol)
+
+
+# In[39]:
+
 
 newDir = out_fol+"/ManualValidation_dta_ms2_Deiostope_test"
 mkdir(newDir)
@@ -207,11 +331,11 @@ for specs in list(inputFileDf['combined']):
     prob = inputFileDf.loc[inputFileDf['combined'] == specs].SequenceProbablity.values[0]
   if "JUMPl_score" in inputFileDf.columns:
     lscoreSite = inputFileDf.loc[inputFileDf['combined'] == specs].JUMPl_score.values[0]
-  spectrum_DF = newDF.loc[newDF.spectrum_peptide_mod == specs] 
+  spectrum_DF = newDF.loc[newDF.combined == specs] 
 #   print (spectrum_DF)
-  peptide = spectrum_DF.loc[spectrum_DF.spectrum_peptide_mod == specs].plain_peptide.values[0]
-  modsOri = spectrum_DF.loc[spectrum_DF.spectrum_peptide_mod == specs].mod_site.values[0]
-  maxCharge = int(spectrum_DF.loc[spectrum_DF.spectrum_peptide_mod == specs].charge.values[0])
+  peptide = spectrum_DF.loc[spectrum_DF.combined == specs].plain_peptide.values[0]
+  modsOri = spectrum_DF.loc[spectrum_DF.combined == specs].modifications.values[0]
+  maxCharge = int(spectrum_DF.loc[spectrum_DF.combined == specs].charge.values[0])
   mods = modsForReport(modsOri, peptide)
 #   modsVariantsAll, massPosList = statModDynModAllVariants(peptide, mods, dyn_AA)
   massPosDict1 = spectrumToDict(spectrumSplit[-1])
@@ -240,7 +364,12 @@ for specs in list(inputFileDf['combined']):
   exp_mz_list = spectrum_DF.exp_mz_list.values[0]
   exp_int_list = spectrum_DF.intensity_list.values[0]
   
-  match_list, match_int_list, true_ions_ppm_list=ionMatches(exp_mz_list, exp_int_list, df_pep, ion_types =ion_types, ionLoss=ionLoss, tol=10)
+  match_list, match_int_list, true_ions_ppm_list=ionMatches(exp_mz_list, exp_int_list, df_pep, ion_types =ion_types, ionLoss=ionLoss, tol=int(tol))
+  
+  
+  
+  
+    
   df_pep2["Peptide_Mod_Seq"] = df_pep2.apply(displaySeqTable, massPosDict=massPosDict1, axis=1)
 
   displayTableCols = []
@@ -369,11 +498,24 @@ for specs in list(inputFileDf['combined']):
   figurename3 = filename+"__MasterSeries.png"
   
 
-  finalDF, seqSymbol = reformat_dataframe2(df, massPosDict1, match_list)
+  finalDF, seqSymbol = reformat_dataframe2(df, massPosDict1,jump_mod_dict, sta_AA, match_list)
   finalDF2 = finalDF.style.applymap(lambda x: 'color: red' if x in match_list else 'color: black')
 
   massSeriesLength = df.shape[0]
   
-
-  writer,updater, N = excelWriter2(writer, finalDF2, "Sheet1", figurename1, figurename2, spectrumSplit,xcorr, prob,lscoreSite, massSeriesLength,matched, seqSymbol,peptide, N, updater)
+  try:
+    lscoreSite = lscoreSite.astype("str")
+    xcorr = xcorr.astype("str")
+    prob = prob.astype("str")
+  except:
+    print ("String has no astype! Warning")
+    
+  writer,updater, N = excelWriter2(writer, finalDF2, "Sheet1", figurename1, figurename2, spectrumSplit,xcorr, prob,lscoreSite, massSeriesLength,matched, seqSymbol, jump_mod_dict, sta_AA,peptide, N, updater)
 writer.save()
+
+
+# In[ ]:
+
+
+
+
