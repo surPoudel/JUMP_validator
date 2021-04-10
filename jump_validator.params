@@ -5,10 +5,10 @@
 peptideFile = /Users/spoudel1/Desktop/PTM_study/ChaoPeng/Check_pho_peptides_Chao.xlsx
 
 #this is the input ID.txt file. It can also be input from jump_l program ID.lscore file
-jump_f_id = /Users/spoudel1/Desktop/PTM_study/ChaoPeng/solubleTauPTMs/dta2ms2/phosphorylation/ID.lscore
+jump_f_id = /Users/spoudel1/Desktop/PTM_study/ChaoPeng/solubleTauPTMs/dta2ms2/unmodified/ID.txt
 
 #this option says whether the output is from jump_l program or not. Type "yes" if JUMP_l was used for pho site localization else type "no"
-jumpl = Yes
+jumpl = No
 
 #path (folder) for .ms2 if .ms2 was used for searching
 ms2_path = /Users/spoudel1/Desktop/PTM_study/ChaoPeng
