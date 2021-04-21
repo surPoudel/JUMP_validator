@@ -281,14 +281,23 @@ def excelWriter2(writer, df,  worksheetName, figure1, figure2,spectrumSplit,xcor
 
   return writer, updater, N
 
-
+#this function is different in consensus library as we cannot sum modifications there
+#as the PTMs are used to extract unimod information
 def spectrumToDict(spectrum):
-  dict1 = {}
-  spectrumCommaSplit = spectrum.split(",")
-  for x in spectrumCommaSplit:
-    y=x.split("_")
-    dict1[y[0]] = float(y[2])
-  return dict1
+    dict1 = {}
+    spectrumCommaSplit = spectrum.split(",")
+    for x in spectrumCommaSplit:
+        y=x.split("_")
+        if y[0] not in dict1.keys():
+            dict1[y[0]] = [float(y[2])]
+        else:
+            dict1[y[0]].append(float(y[2]))
+    dict2 = {}
+
+    for key in dict1.keys():
+        value = np.sum(dict1[key])
+        dict2[key] = value
+    return dict2
 
 def displaySeqTable(row,massPosDict): #massPosDict example is massPosList[0]
   aa = row.Seq
