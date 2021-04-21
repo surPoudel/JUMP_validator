@@ -295,7 +295,7 @@ def spectrumToDict(spectrum):
     dict2 = {}
 
     for key in dict1.keys():
-        value = np.sum(dict1[key])
+        value = np.sum(list(set(dict1[key])))
         dict2[key] = value
     return dict2
 
