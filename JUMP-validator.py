@@ -14,7 +14,7 @@ config = configparser.ConfigParser()
 # from ipynb.fs.full.JUMP_l_modules import *
 import matplotlib.pyplot as plt
 import seaborn as sns
-import os, path
+import os
 from os.path import dirname
 from pandas.plotting import table
 import dataframe_image as dfi
@@ -156,6 +156,7 @@ df_pho["expScan"] = df_pho.exp+"."+df_pho.scan.astype("str")
 ##select required mzxml files for concatention#3
 mzXML_list = []
 samples = list(set(inputDF.Exp))
+#print ("The samples are ",samples)
 for sample in samples:
 
     if ms2_fileType.upper() == "MZXML":
@@ -165,7 +166,7 @@ for sample in samples:
     mzXML_list.append(mzxml)
 
 
-# In[42]:
+#print ("mzXML files are ",mzXML_list)
 
 
 if ms2_fileType.upper() == "MZXML":
@@ -214,45 +215,27 @@ else:
 jump_modAA_dict, jump_mod_dict, sta_AA = getDynStatModsInfoPepXml(pepxml)
 
 
-# In[21]:
-
-
-sta_AA
-
-
-# In[22]:
-
-
 df_pho[["plain_peptide","modifications"]] = df_pho.apply(computeModifications, sta_AA=sta_AA,jump_mod_dict=jump_mod_dict, axis=1)
 
-
-# In[23]:
 
 
 if "SequenceProbablity" not in df_pho.columns:
     df_pho["SequenceProbablity"] = "NA"
 
 
-# In[24]:
-
 
 reqdCols = ['spectrum', 'plain_peptide', 'modifications',
        'SequenceProbablity', 'XCorr','JUMPl_score']
-
-
-# In[25]:
 
 
 df_pho2 = df_pho[reqdCols]
 inputFileDf = df_pho2.copy()
 # inputFileDf = df_pho2.loc[df_pho2.spectrum.str.contains("q190622_VL1377_A")]
 
-
-# In[27]:
-
-
 inputFileDf["spectrum_modifications"] = inputFileDf.spectrum+"_"+inputFileDf.modifications #this is required for same peptide and same spectrum to test different modifications (manually ID.txt file is created by copying ID line but replaceing the peptide sequence with new modificaitons)
 inputFileDf['combined'] = inputFileDf.apply(lambda row: '\t'.join(row.values[0:3].astype(str)), axis=1)
+
+print (inputFileDf['combined'])
 
 
 # In[28]:
@@ -310,7 +293,7 @@ mkdir(out_fol)
 # In[39]:
 
 
-newDir = out_fol+"/ManualValidation_dta_ms2_Deiostope_test"
+newDir = out_fol+"/ManualValidation"
 mkdir(newDir)
 workbookName = newDir+"/Report_of_manual_validation.xlsx"
 writer = pd.ExcelWriter(workbookName, engine='xlsxwriter')
