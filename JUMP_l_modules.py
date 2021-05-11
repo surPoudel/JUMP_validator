@@ -53,7 +53,14 @@ def makeJumpPlainPeptideAndModCols(row,sta_AA,jump_mod_dict):
 
 
 def prepareInput(inputFile):
-    df = pd.read_excel(inputFile)
+    try:
+        df = pd.read_excel(inputFile)
+    except:
+        print ("The input file is not excel. Trying for tab delimited file")
+        try:
+            df = pd.read_csv(inputFile, delimiter="\t")
+        except:
+            print("Please check the input file format. Either excel file or tab delimited file is accepted")
     df["spectrum"] = df.Exp+"."+df.scan.astype("str")+"."+df.charge.astype("str")
     return df
 
