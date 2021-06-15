@@ -589,7 +589,7 @@ def ionSeriesIonLossSpeRes(peptide,massPosDict, maxcharge=1,useMod ="Yes"):
       if losses == "-H2O":
 #water loss if the amino acid sequence is STED
         fate = checkAA(peptide[0:i],["S","T","E","D"])
-        for charge in range(1, maxcharge+1):
+        for charge in range(1, maxcharge):
           if (fate == "True") and (i < len(peptide)):
             valAddKey(all_ions_dict,"b"+losses+"+"+str(charge),(mass.calculate_mass(peptide[:i])+(charge*proton)-h2o-ionloss[losses]+addModMass)/charge)
           else:
@@ -597,7 +597,7 @@ def ionSeriesIonLossSpeRes(peptide,massPosDict, maxcharge=1,useMod ="Yes"):
       if losses == "-NH3":
 #ammonia loss if the amono acid sequence is RKQN
         fate = checkAA(peptide[0:i],["R","K","Q","N"])
-        for charge in range(1, maxcharge+1):
+        for charge in range(1, maxcharge):
           if (fate == "True") and (i < len(peptide)):
             valAddKey(all_ions_dict,"b"+losses+"+"+str(charge),(mass.calculate_mass(peptide[:i])+(charge*proton)-h2o-ionloss[losses]+addModMass)/charge)
             valAddKey(all_ions_dict,"a"+losses+"+"+str(charge),(mass.calculate_mass(peptide[:i])+(charge*proton)-h2o-co-ionloss[losses]+addModMass)/charge)
@@ -606,7 +606,7 @@ def ionSeriesIonLossSpeRes(peptide,massPosDict, maxcharge=1,useMod ="Yes"):
             valAddKey(all_ions_dict,"a"+losses+"+"+str(charge),"---")
                       
       if (losses == "-H3PO4") or (losses == "-HPO3"):
-        for charge in range(1, maxcharge+1):
+        for charge in range(1, maxcharge):
           if "79.96" in str(massPosDict.values()):
 #             fate = checkAA(peptide[0:i],["S","T","Y"])
 #             if fate == "True":
@@ -619,7 +619,7 @@ def ionSeriesIonLossSpeRes(peptide,massPosDict, maxcharge=1,useMod ="Yes"):
               valAddKey(all_ions_dict,"a"+losses+"+"+str(charge),"---")
                       
       if losses == "":
-        for charge in range(1, maxcharge+1):
+        for charge in range(1, maxcharge):
           if i < len(peptide):
             valAddKey(all_ions_dict,"b"+losses+"+"+str(charge),(mass.calculate_mass(peptide[:i])+(charge*proton)-h2o-ionloss[losses]+addModMass)/charge)
             valAddKey(all_ions_dict,"a"+losses+"+"+str(charge),(mass.calculate_mass(peptide[:i])+(charge*proton)-h2o-co-ionloss[losses]+addModMass)/charge)
@@ -646,7 +646,7 @@ def ionSeriesIonLossSpeRes(peptide,massPosDict, maxcharge=1,useMod ="Yes"):
     for losses in ionloss.keys():  
       if losses == "-H2O":
         fate = checkAA(peptide[i:len(peptide)],["S","T","E","D"])
-        for charge in range(1, maxcharge+1):
+        for charge in range(1, maxcharge):
           if (fate == "True") and (i >=1):
             valAddKey(all_ions_dict,"y"+losses+"+"+str(charge),(mass.calculate_mass(peptide[i:])+(charge*proton)-ionloss[losses]+addModMass)/charge)
           else:
@@ -654,7 +654,7 @@ def ionSeriesIonLossSpeRes(peptide,massPosDict, maxcharge=1,useMod ="Yes"):
       
       if losses == "-NH3":
         fate = checkAA(peptide[i:len(peptide)],["R","K","Q","N"])
-        for charge in range(1, maxcharge+1):
+        for charge in range(1, maxcharge):
           if (fate == "True") and (i >=1):
             valAddKey(all_ions_dict,"y"+losses+"+"+str(charge),(mass.calculate_mass(peptide[i:])+(charge*proton)-ionloss[losses]+addModMass)/charge)
           else:
@@ -663,14 +663,14 @@ def ionSeriesIonLossSpeRes(peptide,massPosDict, maxcharge=1,useMod ="Yes"):
       
       if (losses == "-H3PO4") or (losses == "-HPO3"):
 #         fate = checkAA(peptide[i:len(peptide)],["S","T","Y"])
-        for charge in range(1, maxcharge+1):
+        for charge in range(1, maxcharge):
           if "79.96" in str(massPosDict.values()):
             if (i < maxPos) and (i >=1):
               valAddKey(all_ions_dict,"y"+losses+"+"+str(charge),(mass.calculate_mass(peptide[i:])+(charge*proton)-ionloss[losses]+addModMass)/charge)
             else:
               valAddKey(all_ions_dict,"y"+losses+"+"+str(charge),"---")
       if losses == "":
-        for charge in range(1, maxcharge+1):
+        for charge in range(1, maxcharge):
           if (i >=1):
             valAddKey(all_ions_dict,"y"+losses+"+"+str(charge),(mass.calculate_mass(peptide[i:])+(charge*proton)-ionloss[losses]+addModMass)/charge)
             valAddKey(all_ions_dict,"x"+losses+"+"+str(charge),(mass.calculate_mass(peptide[i:])+(charge*proton)+xmassMore-ionloss[losses]+addModMass)/charge)
@@ -882,12 +882,17 @@ def createOutfile(row, df):
     scan = int(outfile_split[-4])
     charge = outfile_split[-2]
     spectrum = run+"."+str(scan)+"."+str(charge)
-  else:
+  elif "Run#" in columns:
     run = row["Run#"]
     scan = row["Scan#"]
     charge = row["z"]
     spectrum = run+"."+str(scan)+"."+str(charge)
-#   print (spectrum)
+  else:
+    run = row["exp"]
+    scan = row["scan"]
+    charge = row["charge"]
+    spectrum = run+"."+str(scan)+"."+str(charge)
+ 
   return spectrum
 
 
