@@ -98,8 +98,22 @@ pepxml = config["caseEvaluation"]["pepxml"]
 
 
 # peptideFile = "../PTM_study/ChaoPeng/solubleTauPTMs/phosphorylation/ID.lscore"
-df_pho2 = pd.read_csv(jump_f_id,delimiter=";",skiprows=return_skiprows(jump_f_id,";", "Peptide"))
+try:
+    df_pho22 = pd.read_csv(jump_f_id,delimiter=";",skiprows=return_skiprows(jump_f_id,";", "Peptide"))
+except:
+    print ("The input file is not JUMP idtxt. Trying for tab delimited file")
+    try:
+        df_pho22 = pd.read_csv(jump_f_id, delimiter="\t")
+    except:
+        print("Please check the input file format. Either JUMP id file(separated by ;) or tab delimited file is accepted")
 
+#please use below code if IDwDecoy from jump -f is used
+
+if "IDwDecoy" in jump_f_id: #IDwDecoy.txt has columns wrongly index
+    df_pho22.reset_index(inplace=True)
+    df_pho22.columns = list(df_pho22.columns[1:])+[str(np.nan)]
+
+df_pho2 = df_pho22.copy()
 
 # In[6]:
 
@@ -235,7 +249,7 @@ inputFileDf = df_pho2.copy()
 inputFileDf["spectrum_modifications"] = inputFileDf.spectrum+"_"+inputFileDf.modifications #this is required for same peptide and same spectrum to test different modifications (manually ID.txt file is created by copying ID line but replaceing the peptide sequence with new modificaitons)
 inputFileDf['combined'] = inputFileDf.apply(lambda row: '\t'.join(row.values[0:3].astype(str)), axis=1)
 
-print (inputFileDf['combined'])
+#print (inputFileDf['combined'])
 
 
 # In[28]:
@@ -327,9 +341,10 @@ for specs in list(inputFileDf['combined']):
 
   ion_types = ["b","y"]
   ionLoss = ["H2O","NH3","H3PO4"]
-  
-  df_pep = ionSeriesIonLossSpeRes(peptide,maxcharge=maxCharge,massPosDict=massPosDict1,useMod ="Yes")
-  
+  if maxCharge == 1:  
+    df_pep = ionSeriesIonLossSpeRes(peptide,maxcharge=2,massPosDict=massPosDict1,useMod ="Yes")
+  else:
+    df_pep = ionSeriesIonLossSpeRes(peptide,maxcharge=maxCharge,massPosDict=massPosDict1,useMod ="Yes")
 
   reqdCols = ["Seq"]
   for x in df_pep.columns:
