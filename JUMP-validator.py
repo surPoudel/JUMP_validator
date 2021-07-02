@@ -239,7 +239,7 @@ if "SequenceProbablity" not in df_pho.columns:
 
 
 reqdCols = ['spectrum', 'plain_peptide', 'modifications',
-       'SequenceProbablity', 'XCorr','JUMPl_score']
+       'SequenceProbablity', 'XCorr','JUMPl_score','abs_delRT']
 
 
 df_pho2 = df_pho[reqdCols]
@@ -320,6 +320,7 @@ for specs in list(inputFileDf['combined']):
   xcorr= "missing"
   prob = "missing"
   lscoreSite = "missing"
+  absDelRT = "missing"
   spectrumSplit = specs.split("\t")
   filename = newDir+"/"+"__".join(spectrumSplit)
   if "XCorr" in inputFileDf.columns:
@@ -328,6 +329,8 @@ for specs in list(inputFileDf['combined']):
     prob = inputFileDf.loc[inputFileDf['combined'] == specs].SequenceProbablity.values[0]
   if "JUMPl_score" in inputFileDf.columns:
     lscoreSite = inputFileDf.loc[inputFileDf['combined'] == specs].JUMPl_score.values[0]
+  if "abs_delRT" in inputFileDf.columns:
+    absDelRT = inputFileDf.loc[inputFileDf['combined'] == specs].abs_delRT.values[0]
   spectrum_DF = newDF.loc[newDF.combined == specs] 
 #   print (spectrum_DF)
   peptide = spectrum_DF.loc[spectrum_DF.combined == specs].plain_peptide.values[0]
@@ -505,10 +508,11 @@ for specs in list(inputFileDf['combined']):
     lscoreSite = lscoreSite.astype("str")
     xcorr = xcorr.astype("str")
     prob = prob.astype("str")
+    absDelRT = absDelRT.asype("str")
   except:
     print ("String has no astype! Warning")
     
-  writer,updater, N = excelWriter2(writer, finalDF2, "Sheet1", figurename1, figurename2, spectrumSplit,xcorr, prob,lscoreSite, massSeriesLength,matched, seqSymbol, jump_mod_dict, sta_AA,peptide, N, updater)
+  writer,updater, N = excelWriter2(writer, finalDF2, "Sheet1", figurename1, figurename2, spectrumSplit,xcorr, prob,lscoreSite, absDelRT,massSeriesLength,matched, seqSymbol, jump_mod_dict, sta_AA,peptide, N, updater)
 writer.save()
 
 

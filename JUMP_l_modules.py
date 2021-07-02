@@ -239,9 +239,9 @@ def reformat_dataframe2(df, posMassDict,jump_mod_dict, sta_AA, match_list):
   return df2, seqSymbol
 
 
-def excelWriter2(writer, df,  worksheetName, figure1, figure2,spectrumSplit,xcorr, prob,lscoreSite, massSeriesLength, matched, seqSymbol,jump_mod_dict, sta_AA, peptide, N=34, updater=0):
+def excelWriter2(writer, df,  worksheetName, figure1, figure2,spectrumSplit,xcorr, prob,lscoreSite, absDelRT,massSeriesLength, matched, seqSymbol,jump_mod_dict, sta_AA, peptide, N=34, updater=0):
   text1 = "Spectrum = "+spectrumSplit[0]+"; Plain Peptide Sequence = "+spectrumSplit[1]+"; Modifications on the Peptide = "+modsForReport(spectrumSplit[2], peptide)
-  text2 = "Xcorr = "+xcorr.astype("str")+"; Localization Probablity Score = "+ str(prob)+"; Localization Site:Score = "+ lscoreSite
+  text2 = "Xcorr = "+xcorr.astype("str")+"; Localization Probablity Score = "+ str(prob)+"; Localization Site:Score = "+ str(lscoreSite)+"; absolute delta RT = "+str(absDelRT)
   text3 = "Figure a) Intensity Plot"
   text4 = "Figure b) Mass deviation of matched ions (ppm tolerance) Plot"
   text5 = "Figure c) Ion series b and y ions with different charge states Plot" 
