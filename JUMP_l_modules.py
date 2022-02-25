@@ -1001,10 +1001,9 @@ def getDynStatModsInfoPepXml(pepxml):
             line = f.readline()
     return var_AA_mass,var_AA_symbol, stat_AA_mass
 
-
-
 #This fucntion computes modifications with all the static and dynamic represenatation
 def computeModifications(row, jump_mod_dict, sta_AA):
+    
     mod_peptide = row.Peptides
     peptideNoFlank = mod_peptide.split(".")[1]
     pepNoFlankList = list(peptideNoFlank)
@@ -1045,6 +1044,7 @@ def computeModifications(row, jump_mod_dict, sta_AA):
         mods.append(new_mod)
     #static modification
 
+
     for sta_key in sta_AA.keys():
         if sta_key == "n":
             sta_mod = "1_S_"+str(sta_AA["n"])+"_n"
@@ -1055,8 +1055,14 @@ def computeModifications(row, jump_mod_dict, sta_AA):
                 if aa == sta_key:
                     sta_mod = str(index+1)+"_S_"+str(sta_AA[aa])
                     mods.append(sta_mod)
-    modifications = ",".join(mods)              
+    
+    modifications = ",".join(mods)    
+    if modifications == "":
+        modifications = "0_S_0_n" #hypothetical mass shift  
+    print (plain_peptide, modifications)         
     return pd.Series([plain_peptide,modifications])
+
+
 
 
 #if the input is ms2File it creates a dataframe with columns = scan, charge, m/z, intensity and so on
