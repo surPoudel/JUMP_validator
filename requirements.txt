@@ -1,0 +1,22 @@
+# Core scientific stack
+pandas
+numpy
+scipy
+
+# Plotting
+matplotlib
+seaborn
+
+# Optional (recommended): better image scaling/preview in the GUI
+pillow
+
+# MS file parsing
+pyteomics
+
+# Excel I/O
+xlsxwriter
+openpyxl
+
+# Report helpers (imported by legacy code)
+dataframe_image
+python-docx

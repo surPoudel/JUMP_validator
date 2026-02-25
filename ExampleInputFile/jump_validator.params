@@ -1,0 +1,37 @@
+[caseEvaluation]
+
+
+#this is the input excel file for the each peptide that are to be manually validated. Headers = Exp	scan	charge (Exp = experiment/fraction name, scan = scan number, charge = z)
+#peptideFile = /home/xwang4/Temp/Final_validation/step_4_frq_one_peptide_protein_table_b5.txt
+peptideFile = /Users/spoudel1/Downloads/test_jump_validator/peptide.txt
+#this is the input ID.txt file. It can also be input from jump_l program ID.lscore file
+jump_f_id = /Users/spoudel1/Downloads/test_jump_validator/ID_custom.txt
+#this option says whether the output is from jump_l program or not. Type "yes" if JUMP_l was used for pho site localization else type "no"
+jumpl = No
+
+#path (folder) for .ms2 if .ms2 was used for searching
+#ms2_path = /Users/spoudel1/Desktop/PTM_study/ChaoPeng
+
+#path (folder) for .mzXML 
+#mzXML_path = /research/rgs01/home/clusterHome/fmasihuz/MCP/Real_Samples/Fraction/F2
+mzXML_path = /Users/spoudel1/Downloads/test_jump_validator
+#files used to extract ms2 information. options (ms2 or mzxml). If option is .ms2, the program will only use ms2_path and if option is .mzXML, the program will use mzXML_path
+
+ms2_fileType = mzxml
+
+#parameters for matching ions
+#ion_types to analyze a.b.c,x,y,z
+ion_types = b,y
+
+#neutral losses to analyze H2O, NH3, H3PO4
+ionLoss = NH3,H2O 
+
+#tolerance for ms2 matching = fragment ion tolerance
+tol=20
+
+#Output folder path
+out_fol = /Users/spoudel1/Downloads/test_jump_validator/Validate
+
+#example pep.xml file that was generated from current search strategy. For example, if you used comet to search 100 raw files. Keep the full path of one pep.xml file (you don't need best file, any file will work)
+pepxml = /Users/spoudel1/Downloads/test_jump_validator/psy_dwp_b05_f01.1.pepXML
+#pepxml = /home/spoudel1/PanPTM_Paper_2021/Null_Search_PTM/Precursor_Mass_Fixed/Precursor_Mass_Fixed/Pho/w010.pep.xml

@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jump-validator"
+version = "0.5.0"
+description = "JUMP spectral validator CLI (legacy algorithm, cross-platform packaging)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "Proprietary" }
+
+dependencies = [
+  "pandas",
+  "numpy",
+  "scipy",
+  "matplotlib",
+  "seaborn",
+  "pillow",
+  "pyteomics",
+  "xlsxwriter",
+  "openpyxl",
+  "dataframe_image",
+  "python-docx",
+]
+
+[project.scripts]
+jump-validator = "jump_validator.cli:main"
+jump-validator-gui = "jump_validator.gui:main"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["jump_validator*"]
