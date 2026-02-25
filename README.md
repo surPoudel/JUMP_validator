@@ -19,6 +19,43 @@ Given a `jump_validator.params`, the validator generates (same as legacy):
 
 The GUI “Results Browser” simply previews the PNG plots already written to disk.
 
+### Output layout
+
+All outputs are written under your configured `out_fol`:
+
+```text
+<out_fol>/
+  ManualValidation/
+    Report_of_manual_validation.xlsx
+    all_ms2_input.pkl
+    <run>.<scan>.<charge>__intensityPlot.png
+    <run>.<scan>.<charge>__intensityPlot_no_annotation_pub.png
+    <run>.<scan>.<charge>__ToleranceMap.png
+    ... (PDF versions of the same plots are also written)
+```
+
+### Example plots
+
+The validator writes **three plot types per spectrum**. Below are *illustrative* examples (your real plots will reflect your data):
+
+**Intensity plot** (`__intensityPlot.png`)
+
+![Example intensity plot](docs/images/intensityPlot_example.png)
+
+**Publication-style plot** (`__intensityPlot_no_annotation_pub.png`)
+
+![Example publication plot](docs/images/intensityPlot_no_annotation_pub_example.png)
+
+**Tolerance map** (`__ToleranceMap.png`)
+
+![Example tolerance map](docs/images/ToleranceMap_example.png)
+
+**GUI results browser** (previews the PNGs written to disk)
+
+![GUI results browser example](docs/images/gui_results_browser_example.png)
+
+
+
 ---
 
 ## Requirements
@@ -179,9 +216,15 @@ Outputs appear in `dist/`.
 
 ### CI build (recommended)
 
-See: `.github/workflows/build-binaries.yml`
+GitHub Actions workflow (optional)
 
-When you push to GitHub, Actions can build and upload artifacts for each OS.
+This repo *can* include a workflow file at:
+
+- `.github/workflows/build-binaries.yml`
+
+If you add it, GitHub Actions can build and upload artifacts for each OS.
+
+> Note: if you push over HTTPS using a Personal Access Token, GitHub requires the token to have **workflow** scope to create/update workflow files. SSH pushes do not have this limitation.
 
 ---
 
@@ -222,7 +265,15 @@ gh repo create <YOUR_REPO> --private --source=. --remote=origin --push
 
 ---
 
-## Revised scripts
+## Legacy scripts
+
+The original scripts are preserved for reference:
+
+- `JUMP-validator_legacy.py`
+- `manualValidationSpectra_legacy.py`
+- `JUMP_l_modules_legacy.py`
+
+The new entrypoints use:
 
 - `jump_validator/validator.py`
 - `jump_validator/gui.py`
