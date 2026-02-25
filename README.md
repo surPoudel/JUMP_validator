@@ -265,15 +265,8 @@ gh repo create <YOUR_REPO> --private --source=. --remote=origin --push
 
 ---
 
-## Legacy scripts
+## Revised scripts
 
-The original scripts are preserved for reference:
-
-- `JUMP-validator_legacy.py`
-- `manualValidationSpectra_legacy.py`
-- `JUMP_l_modules_legacy.py`
-
-The new entrypoints use:
 
 - `jump_validator/validator.py`
 - `jump_validator/gui.py`
