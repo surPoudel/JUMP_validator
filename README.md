@@ -228,43 +228,6 @@ If you add it, GitHub Actions can build and upload artifacts for each OS.
 
 ---
 
-## Pushing this project to your GitHub
-
-I can’t directly push to your GitHub account from here, but you can do it in a minute:
-
-### Option A: using git (works everywhere)
-
-1) Create an empty repo on GitHub (e.g. `JUMP_validator_app`)
-
-2) From the folder that contains `JUMP_validator_app/`:
-
-```bash
-cd JUMP_validator_app
-git init
-git add .
-git commit -m "Add JUMP Validator (CLI+GUI) cross-platform package"
-
-# replace with your repo URL
-git remote add origin https://github.com/<YOUR_USER>/<YOUR_REPO>.git
-git branch -M main
-git push -u origin main
-```
-
-### Option B: using GitHub CLI (`gh`)
-
-```bash
-cd JUMP_validator_app
-git init
-git add .
-git commit -m "Add JUMP Validator (CLI+GUI) cross-platform package"
-
-gh repo create <YOUR_REPO> --private --source=. --remote=origin --push
-```
-
-> Tip: if you keep large example files, consider Git LFS.
-
----
-
 ## Revised scripts
 
 
